@@ -1,0 +1,2 @@
+-r requirements.test.in
+pytest
