@@ -1,2 +1,2 @@
--r requirements.test.in
+-r requirements.in
 pytest
