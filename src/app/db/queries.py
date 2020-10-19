@@ -5,3 +5,27 @@
 #     " LEFT JOIN database.table2 as t2 on t1.a = t2.b "
 #     " WHERE t1.robot <> 3 AND t2.b = :injected_param"
 # )
+from datetime import datetime
+
+
+def UPDATE_USER_GROUP(user_id, group_name):
+    return {
+        '_id': user_id
+    }, {
+        '$set': {
+            '_id': user_id,
+            'user_table': group_name
+        }
+    }
+
+
+def START_GROUP_LESSON(user_id, group_name):
+    return {
+        '_id': group_name,
+        'user_id': user_id
+    }, {
+        '$set': {
+            'lesson_date': datetime.now(),
+        }
+    }
+

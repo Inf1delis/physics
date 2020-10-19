@@ -2,3 +2,5 @@ envparse
 pyTelegramBotAPI
 pymongo
 pymongo[srv]
+pandas
+pygsheets

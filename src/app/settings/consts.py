@@ -15,7 +15,7 @@ MSG_SERVICE_DESCRIPTION = "physics tg bot for a good mark"
 
 TOKEN = env("BOT_TOKEN")
 
-TABLE_URL = ''
+TABLE_URL = 'https://docs.google.com/spreadsheets/d/1dWyW47H6Qzk_k68ZHf7RXYc9-gq1FeXobWbp0iB5LmE/edit#gid=0'
 
 USER_ID = [
     197079657,  # Valya
@@ -23,6 +23,7 @@ USER_ID = [
 ]
 
 ERROR_PARSE_MESSAGE = 'Неправильное использование команды. Введите /help'
+SEARCH_NOT_FOUND_TEXT = 'По такой подстроке никого не найдено'
 SUCCESSED_TEXT = 'Исполнено'
 
 START_NEW_CLASS = 'Добавить новый класс'

@@ -34,3 +34,5 @@ background/
 
 # Jupyter Notebook
 *.ipynb_checkpoints*
+
+**/service_account*

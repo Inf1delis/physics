@@ -1,8 +1,14 @@
-
-
-def parse_new_group(text):
-    text_a = text.split()
-    if not text_a or len(text_a) != 2:
+def _parse_one_arg(text):
+    args_array = text.split()
+    if not args_array or len(args_array) != 2:
         return None
-    group_name = text_a[1]
-    return group_name
+    arg = args_array[1]
+    return arg
+
+
+def parse_group_name(text):
+    return _parse_one_arg(text)
+
+
+def parse_student_substring(text):
+    return _parse_one_arg(text)
