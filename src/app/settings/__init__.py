@@ -1,4 +1,3 @@
-import yaml
 from envparse import env
 from app.db.wrappers import MongoDB
 

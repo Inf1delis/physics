@@ -15,10 +15,15 @@ MSG_SERVICE_DESCRIPTION = "physics tg bot for a good mark"
 
 TOKEN = env("BOT_TOKEN")
 
+TABLE_URL = ''
+
 USER_ID = [
     197079657,  # Valya
     306633623   # Nikita
 ]
+
+ERROR_PARSE_MESSAGE = 'Неправильное использование команды. Введите /help'
+SUCCESSED_TEXT = 'Исполнено'
 
 START_NEW_CLASS = 'Добавить новый класс'
 START_NEW_LESSON = 'Начать новый урок'
