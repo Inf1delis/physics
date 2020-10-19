@@ -11,3 +11,6 @@ VERSION = "2020.06.09"
 SERVICE_NAME = "physics"
 
 MSG_SERVICE_DESCRIPTION = "physics tg bot for a good mark"
+
+START_NEW_CLASS = 'Добавить новый класс'
+START_NEW_LESSON = 'Начать новый урок'
