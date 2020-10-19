@@ -1,5 +1,5 @@
 def _parse_one_arg(text):
-    args_array = text.split()
+    args_array = text.strip().split()
     if not args_array or len(args_array) != 2:
         return None
     arg = args_array[1]

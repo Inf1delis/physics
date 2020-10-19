@@ -17,6 +17,7 @@ MSG_SERVICE_DESCRIPTION = "physics tg bot for a good mark"
 TOKEN = env("BOT_TOKEN")
 
 TABLE_URL = 'https://docs.google.com/spreadsheets/d/1dWyW47H6Qzk_k68ZHf7RXYc9-gq1FeXobWbp0iB5LmE/edit#gid=0'
+TOTAL_DF_COL = 'Всего'
 
 USER_ID = [
     197079657,  # Valya
