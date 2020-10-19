@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from envparse import env
+
 env.read_envfile()
 
 DEBUG = env("DEBUG", default=False)
@@ -19,11 +20,11 @@ TABLE_URL = ''
 
 USER_ID = [
     197079657,  # Valya
-    306633623   # Nikita
+    306633623  # Nikita
 ]
 
 ERROR_PARSE_MESSAGE = 'Неправильное использование команды. Введите /help'
 SUCCESSED_TEXT = 'Исполнено'
 
-START_NEW_CLASS = 'Добавить новый класс'
-START_NEW_LESSON = 'Начать новый урок'
+DICT_OF_BUTTONS = {1: 'Добавить баллы',
+                   2: ['Добавить новый класс', 'Начать новый урок']}
