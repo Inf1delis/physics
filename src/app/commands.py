@@ -19,14 +19,18 @@ def new_group_command(message: Message):
     db.get_collection('users').update_one({
         '_id': message.from_user.id
     }, {
-        '$set': {'user_table': group_name}
-    }, upsert=False)
+        '$set': {
+            '_id': message.from_user.id,
+            'user_table': group_name}
+    }, upsert=True)
 
-    db.get_collection('users_tables').insert_one({
-        '_id': group_name,
-        'user_id': message.from_user.id,
-        'lesson_date': datetime.now(),
-    })
+    db.get_collection('users_tables').update_one({
+        '_id': group_name
+    },{
+        '$set': {
+            'user_id': message.from_user.id,
+            'lesson_date': datetime.now(),
+    }}, upsert=True)
     parse_gtable(TABLE_URL)
     return SUCCESSED_TEXT
 
