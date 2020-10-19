@@ -1,1 +1,0 @@
-from app.commands.test_command import TestCommand   # noqa # pylint: disable=unused-import

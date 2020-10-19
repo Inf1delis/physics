@@ -1,54 +1,34 @@
-from app.settings.logging import init_logging, format_log_message
-import uvicorn
-from loguru import logger
-from fastapi import FastAPI, APIRouter, Request
+import telebot
 
-from app.db import init_databases, shutdown_databases
-from app.settings import load_config, CONFIG
-from app.settings.consts import VERSION, SERVICE_NAME, MSG_SERVICE_DESCRIPTION
+bot = telebot.TeleBot("TOKEN")
 
-router = APIRouter()
+@bot.message_handler(commands=['start', 'help'])
+def handle_start_help(message):
+	pass
 
+# Handles all sent documents and audio files
+@bot.message_handler(content_types=['document', 'audio'])
+def handle_docs_audio(message):
+	pass
 
-@router.on_event("startup")
-async def startup():
-    await init_databases(CONFIG)
+# Handles all text messages that match the regular expression
+@bot.message_handler(regexp="SOME_REGEXP")
+def handle_message(message):
+	pass
 
+# Handles all messages for which the lambda returns True
+@bot.message_handler(func=lambda message: message.document.mime_type == 'text/plain', content_types=['document'])
+def handle_text_doc(message):
+	pass
 
-@router.on_event("shutdown")
-async def shutdown():
-    await shutdown_databases()
+# Which could also be defined as:
+def test_message(message):
+	return message.document.mime_type == 'text/plain'
 
-
-@router.get("/self_check/")
-async def self_check(r: Request):
-    logger.bind(**(await format_log_message(r, {"status": "Ok"}, has_body=False))).info(
-        "self check"
-    )
-    logger.info('status %s', 'Ok')
-    return {"status": "Ok"}
-
-
-
-def init_app():
-    load_config()
-    init_logging()
-
-    app = FastAPI(
-        title=SERVICE_NAME, description=MSG_SERVICE_DESCRIPTION, version=VERSION,
-        docs_url=f'/{SERVICE_NAME}/docs',
-        openapi_url=f'/{SERVICE_NAME}/openapi.json'
-    )
-
-    app.include_router(router, prefix=f"/{SERVICE_NAME}")
-
-    return app
+@bot.message_handler(func=test_message)
+def handle_text_doc(message):
+	pass
 
 
-def run():
-    app = init_app()
-    uvicorn.run(app, host="0.0.0.0", port=8615, log_config=None)
-
-
-if __name__ == "__main__":
-    run()
+if __name__ == '__main__':
+	bot.polling(none_stop=False, interval=0, timeout=20)

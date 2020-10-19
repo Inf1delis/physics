@@ -73,21 +73,11 @@ class InterceptHandler(logging.Handler):
 
 
 async def format_log_message(request, response, has_body=True):
-    log = dict(request)
-    del log["endpoint"]
-    del log["router"]
-    del log["app"]
-    del log["fastapi_astack"]
-    del log["headers"]
+    return dict(request)
 
-    if "raw_path" in log:
-        del log["raw_path"]
 
-    if has_body:
-        log["body"] = await request.json()
-
-    log["response"] = response
-    log["headers"] = dict(request.headers)
-    log["query_string"] = log["query_string"].decode("utf-8")
-
-    return log
+def logger(message, *args, log_on=True, level='info', **kwargs):
+    if log_on:
+        getattr(loguru_logger.bind(
+            **{}
+        ), level.lower())(message, *args, **kwargs)
