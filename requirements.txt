@@ -4,25 +4,29 @@
 #
 #    pip-compile --output-file=requirements.txt requirements.in
 #
-certifi==2020.6.20        # via sentry-sdk
+certifi==2020.6.20        # via requests, sentry-sdk
+chardet==3.0.4            # via requests
 click==7.1.2              # via uvicorn
 envparse==0.2.0           # via -r requirements.in
 fastapi==0.58.1           # via -r requirements.in
 fluent-logger==0.9.6      # via -r requirements.in
 h11==0.9.0                # via uvicorn
 httptools==0.1.1          # via uvicorn
+idna==2.10                # via requests
 loguru==0.5.1             # via -r requirements.in
-motor==2.3.0              # via -r requirements.in
 msgpack==0.6.2            # via fluent-logger
 pika==1.1.0               # via python-logging-rabbitmq
 pydantic==1.5.1           # via fastapi
-pymongo==3.11.0           # via motor
+pymongo==3.11.0           # via -r requirements.in
+pytelegrambotapi==3.7.3   # via -r requirements.in
 python-json-logger==0.1.11  # via -r requirements.in
 python-logging-rabbitmq==2.0.0  # via -r requirements.in
 pyyaml==5.3.1             # via -r requirements.in
+requests==2.24.0          # via pytelegrambotapi
 sentry-sdk==0.16.0        # via -r requirements.in
+six==1.15.0               # via pytelegrambotapi
 starlette==0.13.4         # via fastapi
-urllib3==1.25.9           # via sentry-sdk
+urllib3==1.25.9           # via requests, sentry-sdk
 uvicorn==0.11.5           # via -r requirements.in
 uvloop==0.14.0            # via uvicorn
 websockets==8.1           # via uvicorn

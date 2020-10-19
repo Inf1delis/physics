@@ -2,6 +2,7 @@ class ClickHouse:
     @staticmethod
     def read_settings_async():
         from envparse import env
+
         env.read_envfile()
 
         config = dict()
@@ -20,10 +21,7 @@ class ClickHouse:
         client = Client(session, **config)
         assert await client.is_alive()
 
-        connect = {
-            "client": client,
-            "session": session
-        }
+        connect = {"client": client, "session": session}
         return connect
 
     @staticmethod
@@ -34,14 +32,12 @@ class ClickHouse:
 
 class MySQL:
     @staticmethod
-    def read_settings_async():
+    def read_settings_async(connection_string=True):
         from envparse import env
+
         env.read_envfile()
 
         config = dict()
-        config["host"] = env("MYSQL_HOST")
-        config["port"] = int(env("MYSQL_PORT"))
-
         mysql_user = env("MYSQL_USER", "")
         if mysql_user:
             config["user"] = mysql_user
@@ -50,28 +46,42 @@ class MySQL:
         if mysql_password:
             config["password"] = mysql_password
 
+        config["host"] = env("MYSQL_HOST")
+        config["port"] = int(env("MYSQL_PORT"))
+
         config["db"] = env("MYSQL_DB")
 
+        if connection_string:
+            connection_string = "mysql://"
+            for key, value in config.items():
+                if key == "user":
+                    connection_string += value
+                elif key == "password":
+                    connection_string += f":{value}"
+                elif key == "host":
+                    connection_string += f"@{value}"
+                elif key == "port":
+                    connection_string += f":{value}"
+                elif key == "db":
+                    connection_string += f"/{value}"
+            return {"connection_string": connection_string}
         return config
 
     @staticmethod
     async def init_async(config):
-        import aiomysql
+        from databases import Database
 
-        config["autocommit"] = True
-        connection = await aiomysql.connect(**config)
-        cursor = await connection.cursor()
+        database = Database(
+            config["connection_string"], minsize=0, maxsize=10, pool_recycle=30
+        )
+        await database.connect()
 
-        connect = {
-            "cursor": cursor,
-            "connection": connection
-        }
-        return connect
+        return database
 
     @staticmethod
     async def close_async(connect):
-        await connect["cursor"].close()
-        connect["connection"].close()
+        if connect.is_connected:
+            await connect.disconnect()
 
     @staticmethod
     def read_settings():
@@ -85,10 +95,7 @@ class MySQL:
         connection = MySQLdb.connect(**config)
         cursor = connection.cursor()
 
-        connect = {
-            "connection": connection,
-            "cursor": cursor
-        }
+        connect = {"connection": connection, "cursor": cursor}
         return connect
 
     @staticmethod
@@ -100,6 +107,7 @@ class MongoDB:
     @staticmethod
     def read_settings_async():
         from envparse import env
+
         env.read_envfile()
 
         config = dict()
@@ -115,11 +123,36 @@ class MongoDB:
         conn = aiomotor.AsyncIOMotorClient(config["connection_string"])
         db = conn[config["db"]]
 
-        connect = {
-            "client": db
-        }
+        connect = {"client": db}
         return connect
 
     @staticmethod
     async def close_async(connect):
-        connect['client'].client.close()
+        connect["client"].client.close()
+
+    @staticmethod
+    def read_settings():
+        from envparse import env
+
+        env.read_envfile()
+
+        config = dict()
+        config["connection_string"] = env("MONGODB_CONNECTION_STRING")
+        return config
+
+    @staticmethod
+    def init(config):
+        from pymongo import MongoClient
+
+        conn = MongoClient(config["connection_string"])
+        db = conn.get_database()
+        connect = {"client": db}
+        return connect
+
+    @staticmethod
+    def close(connect):
+        pass
+
+
+if __name__ == "__main__":
+    print(MySQL.read_settings_async())
