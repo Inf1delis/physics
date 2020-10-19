@@ -1,11 +1,3 @@
-uvicorn
-sentry_sdk
 envparse
-pyyaml
-fastapi
-python_logging_rabbitmq
-python-json-logger
-loguru
-fluent-logger
 pyTelegramBotAPI
 pymongo
