@@ -14,7 +14,7 @@ def new_group_command(message: Message):
     if not group_name:
         return ERROR_PARSE_MESSAGE
 
-    db: Database = DBS['mongo']
+    db: Database = DBS['mongo']['client']
 
     db.get_collection('users').update_one({
         '_id': message.from_user.id
@@ -32,7 +32,7 @@ def new_group_command(message: Message):
 
 
 def start_lesson_command(message: Message):
-    db: Database = DBS['mongo']
+    db: Database = DBS['mongo']['client']
     user = db.get_collection('users').find_one({
         '_id': message.from_user.id
     })

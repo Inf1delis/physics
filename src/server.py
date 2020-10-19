@@ -30,5 +30,5 @@ def handle_new_group(message: telebot.types.Message):
 
 if __name__ == '__main__':
     load_config()
-    # init_databases(CONFIG)
+    init_databases(CONFIG)
     bot.polling(none_stop=False, interval=0, timeout=20)

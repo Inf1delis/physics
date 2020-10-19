@@ -6,9 +6,10 @@
 #
 certifi==2020.6.20        # via requests
 chardet==3.0.4            # via requests
+dnspython==1.16.0         # via pymongo
 envparse==0.2.0           # via -r requirements.in
 idna==2.10                # via requests
-pymongo==3.11.0           # via -r requirements.in
+pymongo[srv]==3.11.0      # via -r requirements.in
 pytelegrambotapi==3.7.3   # via -r requirements.in
 requests==2.24.0          # via pytelegrambotapi
 six==1.15.0               # via pytelegrambotapi

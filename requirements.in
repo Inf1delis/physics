@@ -1,3 +1,4 @@
 envparse
 pyTelegramBotAPI
 pymongo
+pymongo[srv]
