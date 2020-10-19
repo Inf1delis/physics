@@ -6,7 +6,8 @@ from app.commands import new_group_command, start_lesson_command, search_command
 from app.db import init_databases
 from app.settings import load_config, CONFIG
 from app.settings.consts import TOKEN, DEBUG
-
+from app.keyboard import keyboard_builder
+import telebot
 bot = telebot.TeleBot(TOKEN)
 
 
@@ -16,7 +17,8 @@ def handle_id(message: telebot.types.Message):
         pprint(message.json)
     response_id = message.from_user.id
     response_text = response_id  # возвращаем user id
-    bot.send_message(message.chat.id, response_text)
+    reply_keyboard = keyboard_builder(2)
+    bot.send_message(message.chat.id, response_text, reply_markup=reply_keyboard)
 
 
 @bot.message_handler(commands=['newGroup'])
