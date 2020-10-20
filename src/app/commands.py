@@ -17,13 +17,13 @@ def new_group_command(message: Message):
     db: Database = DBS['mongo']['client']
 
     db.get_collection('users').update_one(
-        UPDATE_USER_GROUP(
+        *UPDATE_USER_GROUP(
             user_id=message.from_user.id,
             group_name=group_name),
         upsert=True)
 
     db.get_collection('users_tables').update_one(
-        START_GROUP_LESSON(
+        *START_GROUP_LESSON(
             user_id=message.from_user.id,
             group_name=group_name),
         upsert=True)
@@ -35,9 +35,6 @@ def start_lesson_command(message: Message):
     if not user_table:
         return ERROR_PARSE_MESSAGE
     db: Database = DBS['mongo']['client']
-    user = db.get_collection('users').find_one({
-        '_id': message.from_user.id
-    })
 
     db.get_collection('users').update_one(
         *UPDATE_USER_GROUP(
@@ -61,10 +58,15 @@ def search_command(message: Message):
     db: Database = DBS['mongo']['client']
     gtable = CONFIG['gtable']  # type: GTable
 
-    user = list(db.get_collection('users').aggregate(
+    # этот метод возвращает список, пусть будет так, потом может исправим
+    user_list = list(db.get_collection('users').aggregate(
         GET_USER_BY_ID(user_id=message.from_user.id)
-    ))[0]
+    ))
 
+    if not user_list:
+        return ERROR_PARSE_MESSAGE
+
+    user = user_list[0] # only one user
     user_table = user['user_table']
     df: pd.DataFrame = gtable.from_gsheet(user_table)
 

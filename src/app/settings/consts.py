@@ -25,8 +25,9 @@ USER_ID = [
 ]
 
 ERROR_PARSE_MESSAGE = 'Неправильное использование команды. Введите /help'
+UNAUTHORIZED_USER_MESSAGE = 'Вы не добавили себе таблицу. /newGroup [group]'
 SEARCH_NOT_FOUND_TEXT = 'По такой подстроке никого не найдено'
-SUCCESSED_TEXT = 'Исполнено'
+SUCCESSED_TEXT = 'Дело сделано'
 
 DICT_OF_BUTTONS = {1: 'Добавить баллы',
                    2: ['Добавить новый класс', 'Начать новый урок']}
