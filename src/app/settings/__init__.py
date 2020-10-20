@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from envparse import env
 from app.db.wrappers import MongoDB
 
@@ -15,5 +17,13 @@ def load_config():
     CONFIG["mongo"] = MongoDB.read_settings()
     CONFIG["bot_token"] = env('BOT_TOKEN')
 
-    gtable_credentials_path = "./app/config/service_account_credentials.json"
+    p = Path(__file__) / "../../config/service_account_credentials.json"
+    p = str(p.resolve())
+
+    gtable_credentials_path = p
+    with open(gtable_credentials_path, 'w') as f:
+        import json
+        j = env('SERVICE_ACCOUNT_CREDENTIALS').encode('unicode_escape').decode('utf-8')
+        j = json.loads(j)
+        json.dump(j, f)
     CONFIG['gtable'] = GTable(env("GTABLE_KEY"), gtable_credentials_path)

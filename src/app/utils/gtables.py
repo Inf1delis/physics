@@ -14,7 +14,9 @@ class GTable:
     df: pd.DataFrame = None
 
     def __post_init__(self):
-        gtable = pygsheets.authorize(service_file=self.service_file_path)
+        gtable = pygsheets.authorize(
+            service_file=self.service_file_path,
+        )
         self.sh = gtable.open_by_key(self.table_key)
 
     def _gtable_wks(self, df, wks_name):

@@ -4,10 +4,10 @@ import telebot
 
 from app.commands import new_group_command, start_lesson_command, search_command
 from app.db import init_databases
+from app.keyboard import keyboard_builder
 from app.settings import load_config, CONFIG
 from app.settings.consts import TOKEN, DEBUG
-from app.keyboard import keyboard_builder
-import telebot
+
 bot = telebot.TeleBot(TOKEN)
 
 
