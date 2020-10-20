@@ -1,5 +1,4 @@
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
-from app.settings.consts import *
 
 
 def keyboard_builder(name):

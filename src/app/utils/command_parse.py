@@ -15,10 +15,10 @@ def parse_student_substring(text):
 
 def parse_name_and_score(text):
     """
-        Парсинг строки для получения имени студента и его баллов
+    Парсинг строки для получения имени студента и его баллов
+    :param text: Строка с Именем и количеством баллов
     :return:
     """
     args_array = text.strip().split('$')
-    if not args_array or len(args_array) != 2:
-        return None, None
+
     return args_array[0], float(args_array[1])

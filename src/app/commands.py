@@ -6,14 +6,20 @@ import pandas as pd
 from app.db import DBS
 from app.db.queries import UPDATE_USER_GROUP, START_GROUP_LESSON, GET_USER_BY_ID
 from app.settings import CONFIG
-from app.settings.consts import SUCCESSED_TEXT, ERROR_PARSE_MESSAGE, SEARCH_NOT_FOUND_TEXT, WORKSHEET_NOT_EXISTS
+from app.settings.consts import SUCCESSED_TEXT, ERROR_PARSE_MESSAGE, SEARCH_NOT_FOUND_TEXT, WORKSHEET_NOT_EXISTS, PUPIL_NOT_FOUND
 from app.utils.command_parse import parse_group_name, parse_student_substring, parse_name_and_score
 
 
 def start_lesson_command(message: Message):
+    """
+    Реализация начала урока
+    :param message:
+    :return:
+    """
     user_table = parse_group_name(message.text)
     if not user_table:
         return ERROR_PARSE_MESSAGE
+
     db: Database = DBS['mongo']['client']
 
     db.get_collection('users').update_one(
@@ -27,10 +33,16 @@ def start_lesson_command(message: Message):
             user_id=message.from_user.id,
             group_name=user_table),
         upsert=True)
+
     return SUCCESSED_TEXT
 
 
 def search_command(message: Message):
+    """
+    Реализация метода для поиска ученика
+    :param message:
+    :return:
+    """
     student_substr = parse_student_substring(message.text)
     if not student_substr:
         return ERROR_PARSE_MESSAGE
@@ -65,22 +77,33 @@ def search_command(message: Message):
 
 
 def score_command(user_id, text):
+    """
+    Метод добавления оценки
+    :param user_id:
+    :param text:
+    :return:
+    """
     db: Database = DBS['mongo']['client']
     gtable = CONFIG['gtable']  # type: GTable
 
     user = get_user(user_id, db)
+    if user is None or not user:
+        return PUPIL_NOT_FOUND
+
     user_name, score = parse_name_and_score(text)
+
     gtable.score_student(
         group_name=user['user_table'],
         student_name=user_name,
         score=score,
         lesson_date=user['table']['lesson_date'])
+
     return f'Баллы в количестве={score} добавлены студенту {user_name}'
 
 
 def get_user(user_id, db):
     """
-
+    Получение идентификатора ученика для начисления баллов
     :return:
     """
     # этот метод возвращает список, пусть будет так, потом может исправим
