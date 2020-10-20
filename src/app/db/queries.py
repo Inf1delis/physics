@@ -21,10 +21,11 @@ def UPDATE_USER_GROUP(user_id, group_name):
 
 def START_GROUP_LESSON(user_id, group_name):
     return ({
-        '_id': group_name,
-        'user_id': user_id
+        '_id': '{}_{}'.format(user_id, group_name),
     }, {
         '$set': {
+            'group_name': group_name,
+            'user_id': user_id,
             'lesson_date': datetime.now(),
         }
     })
@@ -32,9 +33,12 @@ def START_GROUP_LESSON(user_id, group_name):
 
 def GET_USER_BY_ID(user_id):
     return [{
+        '$addFields': {
+            'group_id': { '$concat': [ { "$toString": "$_id"}, "_", "$group_name" ] } }
+        }, {
         '$lookup': {
             'from': "users_tables",
-            'localField': "user_table",
+            'localField': "group_id",
             'foreignField': "_id",
             'as': 'merge'
         }}, {
