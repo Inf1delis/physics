@@ -24,10 +24,8 @@ def load_config():
     with open(gtable_credentials_path, 'w') as f:
         import json
         j = env('SERVICE_ACCOUNT_CREDENTIALS').encode('unicode_escape').decode('utf-8')
+        j = j.replace('|', r'\n')
         j = json.loads(j)
         json.dump(j, f)
-
-    print('GTABLE_KEY', env("GTABLE_KEY"))
-    print('SERVICE_ACCOUNT_CREDENTIALS', list(j.keys()))
 
     CONFIG['gtable'] = GTable(env("GTABLE_KEY"), gtable_credentials_path)
