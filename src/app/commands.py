@@ -6,7 +6,7 @@ from app.db import DBS
 from app.db.queries import UPDATE_USER_GROUP, START_GROUP_LESSON, GET_USER_BY_ID
 from app.settings import CONFIG
 from app.settings.consts import SUCCESSED_TEXT, ERROR_PARSE_MESSAGE, SEARCH_NOT_FOUND_TEXT
-from app.utils.command_parse import parse_group_name, parse_student_substring
+from app.utils.command_parse import parse_group_name, parse_student_substring, parse_name_and_score
 
 
 def new_group_command(message: Message):
@@ -58,15 +58,7 @@ def search_command(message: Message):
     db: Database = DBS['mongo']['client']
     gtable = CONFIG['gtable']  # type: GTable
 
-    # этот метод возвращает список, пусть будет так, потом может исправим
-    user_list = list(db.get_collection('users').aggregate(
-        GET_USER_BY_ID(user_id=message.from_user.id)
-    ))
-
-    if not user_list:
-        return ERROR_PARSE_MESSAGE
-
-    user = user_list[0] # only one user
+    user = get_user(message.from_user.id, db)
     user_table = user['user_table']
     df: pd.DataFrame = gtable.from_gsheet(user_table)
 
@@ -86,4 +78,34 @@ def search_command(message: Message):
     #     score=0.1,
     #     lesson_date=user['table']['lesson_date'])
     #################################################
-    return '\n'.join(matched_students)
+    return matched_students
+
+
+def score_command(user_id, text):
+    db: Database = DBS['mongo']['client']
+    gtable = CONFIG['gtable']  # type: GTable
+
+    user = get_user(user_id, db)
+    user_name, score = parse_name_and_score(text)
+    gtable.score_student(
+        group_name=user['user_table'],
+        student_name=user_name,
+        score=score,
+        lesson_date=user['table']['lesson_date'])
+    return f'Баллы в количестве={score} добавлены студенту {user_name}'
+
+
+def get_user(user_id, db):
+    """
+
+    :return:
+    """
+    # этот метод возвращает список, пусть будет так, потом может исправим
+    user_list = list(db.get_collection('users').aggregate(
+        GET_USER_BY_ID(user_id=197079657)))
+
+    if not user_list:
+        return ERROR_PARSE_MESSAGE
+
+    user = user_list[0]  # only one user
+    return user

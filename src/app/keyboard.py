@@ -1,15 +1,19 @@
-from telebot.types import ReplyKeyboardMarkup, KeyboardButton
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from app.settings.consts import *
 
 
-def keyboard_builder(count_of_buttons):
+def keyboard_builder(name):
     """
     Формирование кнопочек
     :return:
     """
-    reply_key_board = ReplyKeyboardMarkup(resize_keyboard=True)
-    buttons = DICT_OF_BUTTONS[count_of_buttons]
-    for button in buttons:
-        button = KeyboardButton(text=button)
-        reply_key_board.add(button)
+    scores = ['0.25', '0.5', '1']
+    scores_btn = []
+    for score in scores:
+        callback_data = '{}${}'.format(name, score)
+        btn = InlineKeyboardButton(text=score, callback_data=callback_data)
+        scores_btn += [btn]
+
+    reply_key_board = InlineKeyboardMarkup()
+    reply_key_board.row(*scores_btn)
     return reply_key_board
