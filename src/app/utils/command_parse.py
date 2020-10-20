@@ -2,7 +2,7 @@ def _parse_one_arg(text):
     args_array = text.strip().split()
     if not args_array or len(args_array) != 2:
         return None
-    arg = args_array[1]
+    arg = args_array[1].strip()
     return arg
 
 
