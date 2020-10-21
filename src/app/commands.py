@@ -6,7 +6,9 @@ import pandas as pd
 from app.db import DBS
 from app.db.queries import UPDATE_USER_GROUP, START_GROUP_LESSON, GET_USER_BY_ID
 from app.settings import CONFIG
-from app.settings.consts import SUCCESSED_TEXT, ERROR_PARSE_MESSAGE, SEARCH_NOT_FOUND_TEXT, WORKSHEET_NOT_EXISTS, PUPIL_NOT_FOUND
+from app.settings.consts import SUCCESSED_TEXT, ERROR_PARSE_MESSAGE, SEARCH_NOT_FOUND_TEXT, WORKSHEET_NOT_EXISTS, \
+    PUPIL_NOT_FOUND, UNAUTHORIZED_USER_MESSAGE
+from app.utils import check_auth
 from app.utils.command_parse import parse_group_name, parse_student_substring, parse_name_and_score
 
 
@@ -16,6 +18,9 @@ def start_lesson_command(message: Message):
     :param message:
     :return:
     """
+    if not check_auth(message.from_user.id):
+        return UNAUTHORIZED_USER_MESSAGE
+
     user_table = parse_group_name(message.text)
     if not user_table:
         return ERROR_PARSE_MESSAGE
@@ -43,6 +48,9 @@ def search_command(message: Message):
     :param message:
     :return:
     """
+    if not check_auth(message.from_user.id):
+        return UNAUTHORIZED_USER_MESSAGE
+
     student_substr = parse_student_substring(message.text)
     if not student_substr:
         return ERROR_PARSE_MESSAGE
@@ -73,6 +81,9 @@ def score_command(user_id, text):
     :param text:
     :return:
     """
+    if not check_auth(user_id):
+        return UNAUTHORIZED_USER_MESSAGE
+
     db: Database = DBS['mongo']['client']
     gtable = CONFIG['gtable']  # type: GTable
 
@@ -93,7 +104,7 @@ def score_command(user_id, text):
 
 def get_user(user_id, db):
     """
-    Получение идентификатора ученика для начисления баллов
+    Получение данные учителя и выбранной таблицы
     :return:
     """
     # этот метод возвращает список, пусть будет так, потом может исправим
