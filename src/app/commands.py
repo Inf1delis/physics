@@ -63,16 +63,6 @@ def search_command(message: Message):
         return SEARCH_NOT_FOUND_TEXT
 
     matched_students = df[search].transpose().iloc[0].values.tolist()
-
-    #################################################
-    ####### пример кода, как можно давать баллы людям
-    #################################################
-    # gtable.score_student(
-    #     group_name=user_table,
-    #     student_name=matched_students[0],
-    #     score=0.1,
-    #     lesson_date=user['table']['lesson_date'])
-    #################################################
     return matched_students
 
 
@@ -92,13 +82,13 @@ def score_command(user_id, text):
 
     user_name, score = parse_name_and_score(text)
 
-    gtable.score_student(
+    response_text = gtable.score_student(
         group_name=user['user_table'],
         student_name=user_name,
         score=score,
         lesson_date=user['table']['lesson_date'])
 
-    return f'Баллы в количестве={score} добавлены студенту {user_name}'
+    return response_text
 
 
 def get_user(user_id, db):
@@ -108,10 +98,10 @@ def get_user(user_id, db):
     """
     # этот метод возвращает список, пусть будет так, потом может исправим
     user_list = list(db.get_collection('users').aggregate(
-        GET_USER_BY_ID(user_id=197079657)))
+        GET_USER_BY_ID(user_id=user_id)))
 
     if not user_list:
-        return ERROR_PARSE_MESSAGE
+        return None
 
     user = user_list[0]  # only one user
     return user

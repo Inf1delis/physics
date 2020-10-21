@@ -3,6 +3,7 @@ from datetime import datetime
 
 import pandas as pd
 import pygsheets
+from pygsheets import VerticalAlignment
 
 from app.settings.consts import TOTAL_DF_COL
 
@@ -30,6 +31,7 @@ class GTable:
             cell: pygsheets.Cell = cell
             cell.set_text_format("bold", True)
             cell.set_text_format("fontSize", 12)
+            cell.set_vertical_alignment(VerticalAlignment.MIDDLE)
 
     def to_gsheet(self, df: pd.DataFrame, wks_name=None):
         if df.empty:
@@ -43,6 +45,8 @@ class GTable:
 
     def score_student(self, group_name: str, student_name: str, score: float, lesson_date: datetime):
         df = self.df
+        if df is None:
+            return f'Ошибка. Поиск давно не производился, сначала сделайте поиск.'
         df = df.drop([TOTAL_DF_COL], axis=1, errors='ignore')
         df.fillna(0.)
 
@@ -54,3 +58,4 @@ class GTable:
         df[TOTAL_DF_COL] = df[df.columns[1:]].sum(axis=1)
         df = df.round(2)
         self.to_gsheet(df, group_name)
+        return f'Баллы в количестве {score} добавлены студенту "{student_name}"'

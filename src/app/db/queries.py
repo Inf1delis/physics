@@ -1,10 +1,4 @@
 # It's a file where you can store your queries to the database
-# For example,
-# QUERY_ORDER_DATA = (
-#     "SELECT t1.a, t2.b FROM database.table1 as t1"
-#     " LEFT JOIN database.table2 as t2 on t1.a = t2.b "
-#     " WHERE t1.robot <> 3 AND t2.b = :injected_param"
-# )
 from datetime import datetime
 
 
@@ -31,15 +25,15 @@ def START_GROUP_LESSON(user_id, group_name):
     })
 
 
-def GET_USER_BY_ID(user_id):
+def GET_USER_BY_ID(user_id: int):
     return [{
         '$addFields': {
             'group_id': { '$concat': [ { "$toString": "$_id"}, "_", "$group_name" ] } }
         }, {
         '$lookup': {
             'from': "users_tables",
-            'localField': "group_id",
-            'foreignField': "_id",
+            'localField': "user_table",
+            'foreignField': "group_name",
             'as': 'merge'
         }}, {
         '$project': {

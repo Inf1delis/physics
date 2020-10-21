@@ -16,7 +16,8 @@ def call_back_room(c: telebot.types.CallbackQuery):
     :param c:
     :return:
     """
-    response_text = score_command(c.message.from_user.id, c.data)
+    print(c.message)
+    response_text = score_command(c.message.chat.id, c.data)
     bot.send_message(c.message.chat.id, response_text)
 
 

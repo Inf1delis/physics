@@ -13,6 +13,7 @@ def parse_group_name(text):
 def parse_student_substring(text):
     return _parse_one_arg(text)
 
+
 def parse_name_and_score(text):
     """
     Парсинг строки для получения имени студента и его баллов
