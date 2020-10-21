@@ -21,7 +21,8 @@ TOTAL_DF_COL = 'Всего'
 
 USER_IDS = [
     197079657,  # Valya
-    306633623  # Nikita
+    306633623,  # Nikita
+    1139151616
 ]
 
 ERROR_PARSE_MESSAGE = 'Неправильное использование команды. Введите /help'
