@@ -1,10 +1,11 @@
-from pprint import pprint
 from app.commands import start_lesson_command, search_command, score_command
 from app.db import init_databases
 from app.keyboard import keyboard_builder
 from app.settings import load_config, CONFIG
-from app.settings.consts import TOKEN, DEBUG, HELP_MESSAGE, TABLE_URL, GREETING_MESSAGE
+from app.settings.consts import TOKEN, HELP_MESSAGE, TABLE_URL, GREETING_MESSAGE
 import telebot
+
+from app.utils import logger
 
 bot = telebot.TeleBot(TOKEN)
 
@@ -16,7 +17,7 @@ def call_back_room(c: telebot.types.CallbackQuery):
     :param c:
     :return:
     """
-    print(c.message)
+    logger(c.message)
     response_text = score_command(c.message.chat.id, c.data)
     bot.send_message(c.message.chat.id, response_text)
 
@@ -28,8 +29,7 @@ def handle_id(message: telebot.types.Message):
     :param message: Входящий запрос
     :return:
     """
-    if DEBUG:
-        pprint(message.json)
+    logger(message.json)
     response_id = message.from_user.id
     response_text = response_id  # возвращаем user id
     bot.send_message(message.chat.id, response_text)
@@ -42,9 +42,7 @@ def handle_start_lesson(message: telebot.types.Message):
     :param message: Входящий запрос
     :return:
     """
-    if DEBUG:
-        pprint(message.json)
-
+    logger(message.json)
     response_text = start_lesson_command(message)
     bot.send_message(message.chat.id, response_text)
 
@@ -56,8 +54,7 @@ def handle_search(message: telebot.types.Message):
     :param message: Входящий запрос
     :return:
     """
-    if DEBUG:
-        pprint(message.json)
+    logger(message.json)
     response_text = search_command(message)
     if isinstance(response_text, list):
         for name in response_text:
@@ -73,8 +70,7 @@ def handler_start(message: telebot.types.Message):
     :param message: Входящий запрос
     :return:
     """
-    if DEBUG:
-        pprint(message.json)
+    logger(message.json)
     response_text = GREETING_MESSAGE
     bot.send_message(message.chat.id, response_text)
 
@@ -86,8 +82,7 @@ def handler_help(message: telebot.types.Message):
     :param message: Входящий запрос
     :return:
     """
-    if DEBUG:
-        pprint(message.json)
+    logger(message.json)
     response_text = HELP_MESSAGE.format(TABLE_URL)
     bot.send_message(message.chat.id, response_text)
 
